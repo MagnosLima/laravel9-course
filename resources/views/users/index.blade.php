@@ -1,1 +1,17 @@
-Listagem de usuários
+@extends('layouts.app')
+
+@section('title', 'Listagem dos Usuários')
+
+@section('content')
+<h1>Listagem dos usuários</h1>
+
+<ul>
+    @foreach($users as $user)
+    <li>
+        {{ $user->name }} -
+        {{ $user->email }}
+        | <a href="{{ route('users.show', $user->id) }}">Detalhes do usuário</a>
+    </li>   
+    @endforeach
+</ul>    
+@endsection
