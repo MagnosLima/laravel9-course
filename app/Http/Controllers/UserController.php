@@ -59,4 +59,26 @@ class UserController extends Controller
         ));*/
         //dd('cadastrando o usuário');
     }
+
+    public function edit($id)
+    {
+        if(!$user = User::find($id))
+            return redirect()->route('users.index');        
+
+        return view('users.edit', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        if(!$user = User::find($id))
+            return redirect()->route('users.index');        
+
+        $data = $request->only('name', 'email');
+        if ($request->password)
+            $data['password'] = bcrypt($request->password);
+
+        $user->update($data);
+        //dd($request->all());
+        return redirect()->route('users.index');
+    }
 }
