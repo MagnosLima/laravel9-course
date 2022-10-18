@@ -8,9 +8,21 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::get();
+        //dd($request->search);
+        //$filtro = $request->search;
+        //dd($filtro);
+        //$users = User::where('name', 'LIKE', "%{$request->search}%")->get();
+        $search = $request->search;
+        $users = User::where(function($query) use($search) {
+            if($search){    
+                $query->where('email', $search);
+                $query->orWhere('name', 'LIKE', "%{$search}%");
+            }
+        })->get();
+        //dd($users);
+        //$users = User::get();
         //dd($users); 
         //dd('UserController@index');
         return view('users.index', compact('users'));
