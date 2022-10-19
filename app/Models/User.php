@@ -41,4 +41,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getUsers(string|null $search = null)
+    {
+        $users = $this->where(function($query) use($search) {
+            if($search){    
+                $query->where('email', $search);
+                $query->orWhere('name', 'LIKE', "%{$search}%");
+            }
+        })->get();
+
+        return $users;
+    }
+
+    public function updateUser($request, $user)
+    {
+        $data = $request->only('name', 'email');
+        if ($request->password)
+            $data['password'] = bcrypt($request->password);
+
+        $user->update($data);
+    }
 }
